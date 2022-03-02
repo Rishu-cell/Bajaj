@@ -1,38 +1,26 @@
-const express = require("express");
-const bodyParser = require("body-parser");
+import express from "express";
+import Cors from 'cors';
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 8001;
+app.use(express.json());
+app.use(Cors());
 
-app.get("/", (req, res) => {
-  res.send("Bajaj Finserv Hiring Backend Testing");
-});
+app.get('/', (req, res) => res.status(200).send("Hello Programmers"));
 
-app.post("/dhlf", (req, response) => {
-  console.log(req.body.data);
-  req.body.data = req.body.data.replace("/", "");
-  var res = [];
-  var numbers = [];
-  var alphabets = {};
-  for (var i = 0; i < req.body.data.length; i++) {
-    if (req.body.data[i] >= "INT_MIN" && req.body.data[i] <= "INT_MAX") {
-      numbers.push(req.body.data[i]);
-    } else if (
-      (req.body.data[i] >= "a" && req.body.data[i] <= "z")
-    ) {
-      alphabets.push(req.body.data[i]);
-    }
-  }
+app.post('/bfhl', (req, res) => {
+    const data = [...req.body.data]
 
-  res["is_success"] = true/false;
-  res["user_id"] = "codequotient";
-  res["email"] = "check____.cse19@chitkara.edu.in";
-  res["roll_nunmber"] = "181089999";
-  res["numbers"] = numbers;
-  res["alphabets"] = alphabets;
+    let numbers = data.filter((value) => !isNaN(value))
 
-  response.send(res);
-});
+    let alphabets = data.filter((value) => (/[a-zA-Z]/).test(value));
+    res.status(200).send({
+        'is_success': 'true',
+        'user_id': 'yourname_yourrollno',
+        'email': 'yourrmail',
+        'roll_number': 'yourrollno',
+        'numbers': numbers,
+        'alphabet': alphabets
+    })
+})
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
-});
+app.listen(port, () => console.log(`listening :${port}`));
